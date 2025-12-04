@@ -28,3 +28,14 @@ variable "project_name" {
     type        = string
   
 }
+
+variable "key_name" {
+    description = "The name of the key pair"
+    type        = string
+  
+}
+
+variable "iam_instance_profile" {
+  description = "IAM Instance Profile name to attach to EC2"
+  type        = string
+}

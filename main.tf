@@ -1,3 +1,12 @@
+# 1. Key Pair Yahan Banao (Root Level)
+resource "aws_key_pair" "deployer" {
+  key_name   = "tayyab-terraform-key"
+  
+  # Ye path tumhare laptop ka hai (Linux/Mac k liye)
+  public_key = file("/home/ubuntu/.ssh/id_rsa.pub") 
+}
+
+
 module "vpc" {
     source = "./modules/vpc"
     cidr_vpc = var.vpc_cidr
@@ -15,6 +24,8 @@ module "ec2" {
     subnets = [module.vpc.public_subnet_1_id, module.vpc.public_subnet_2_id]
     security_group_id = module.vpc.sg_id
     project_name = var.project_name
+    key_name = aws_key_pair.deployer.key_name
+    iam_instance_profile = module.iam.instance_profile_name
     
 }
 
@@ -32,4 +43,9 @@ module "s3" {
     source = "./modules/s3"
     bucket_name = var.s3_bucket_name
   
+}
+
+module "iam" {
+    source = "./modules/iam"
+    project_name = var.project_name
 }
